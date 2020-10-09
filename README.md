@@ -50,3 +50,13 @@ This is the required re-routing of the Pins:
 All Pins are direclty connected expect Audio MCLK is connected via
 a 100 Ohm resistor.
 
+## Rotary Encoder Buddy Board v1.1
+
+Add a rotary encoder with button to your Euroshield.
+
+### BOM
+
+| Symbol | Part | Description | Mouser No. |
+|--------|------|-------------|------------|
+| ROT1 | PEC12R-3220F-S0024 | Bourns Rotary Encoder | 652-PEC12R3220FS0024 |
+| R1-R3 | SMD 0805 10k | 10k Resistor | 71-CRCW080510K0FKEAC |

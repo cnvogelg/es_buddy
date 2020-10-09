@@ -1,4 +1,4 @@
-3237795677905830
+3242600246084704
 Button_Switch_THT
 KSA_Tactile_SPST
 KSA http://www.ckswitches.com/media/1457/ksa_ksl.pdf
@@ -18045,6 +18045,13 @@ RV_64W
 0
 3
 3
+cvparts
+Rotary_Encoder_PEC12R-3220F-S0024
+
+
+0
+7
+5
 modules
 DSUB-9_Female_EdgeMount_P2.77mm
 9-pin D-Sub connector, solder-cups edge-mounted, female, x-pin-pitch 2.77mm, distance of mounting holes 25mm, see https://disti-assets.s3.amazonaws.com/tonar/files/datasheets/16730.pdf
@@ -18885,3 +18892,17 @@ DSUB-62-HD_Male_Vertical_P2.41x1.98mm_MountingHoles
 0
 64
 63
+sparkfun
+SF-4x-7-SEGMENT-CC
+
+
+0
+12
+12
+sparkfun
+SF-ROTARY-ENCODER
+
+
+0
+7
+5

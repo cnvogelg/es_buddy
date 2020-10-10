@@ -1,0 +1,46 @@
+{
+  "name": "es_buddy",
+  "frameworks": "Arduino",
+  "platforms": "Teensy",
+  "keywords": "euroshield",
+  "description": "Euroshield Helper Lib",
+  "url": "https://github.com/cnvogelg/es_buddy",
+  "version": "1.0",
+  "export": {
+    "exclude": [
+      "hardware"
+    ]
+  },
+  "authors":
+  {
+    "name": "Christian Vogelgsang",
+    "maintainer": true
+  },
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/cnvogelg/es_buddy"
+  },
+  "dependencies": [
+    {
+      "name": "Audio",
+      "frameworks": "Arduino"
+    },
+    {
+      "name": "Encoder",
+      "frameworks": "Arduino"
+    },
+    {
+      "name": "ST7735_t3",
+      "frameworks": "Arduino"
+    },
+    {
+      "name": "Adafruit_SSD1306",
+      "frameworks": "Arduino"
+    }
+  ], 
+  "examples": [
+    "examples/*/*.ino",
+    "examples/*/*/*.ino"
+  ]
+}

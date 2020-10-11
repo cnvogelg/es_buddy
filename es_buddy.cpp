@@ -4,29 +4,11 @@ const int myInput = AUDIO_INPUT_LINEIN;
 
 ESBuddy::ESBuddy()
     : _encoder(ES_ROTARY_ENCA_PIN, ES_ROTARY_ENCB_PIN)
-#ifdef ES_HAVE_TFT
-    , _tftDisplay(
-        ES_DISPLAY_CS, 
-        ES_DISPLAY_DC, 
-        ES_DISPLAY_MOSI,
-        ES_DISPLAY_SCK, 
-        ES_DISPLAY_RST
-    )
-#endif
-#ifdef ES_HAVE_OLED
-    , _oledDisplay(
-        ES_DISPLAY_MOSI,
-        ES_DISPLAY_CLK,
-        ES_DISPLAY_DC,
-        ES_DISPLAY_RST,
-        ES_DISPLAY_CS  
-    )
-#endif
-{
-}
+{}
 
 void ESBuddy::init(float volume)
 {
+    pinMode(ES_BUTTON_PIN, INPUT);
     // setup LEDs
     pinMode(ES_LED1_PIN, OUTPUT);
     pinMode(ES_LED2_PIN, OUTPUT);
@@ -37,16 +19,6 @@ void ESBuddy::init(float volume)
     _audioShield.enable();
     _audioShield.inputSelect(myInput);
     _audioShield.volume(volume);
-
-#ifdef ES_HAVE_TFT
-    _tftDisplay.initR(INITR_BLACKTAB);
-    _tftDisplay.setRotation(3);
-    _tftDisplay.fillScreen(ST7735_BLACK);
-    _tftDisplay.useFrameBuffer(true);
-#endif
-#ifdef ES_HAVE_OLED
-    _oledDisplay.begin();
-#endif
 }
 
 void ESBuddy::ledBarWrite(int val)
@@ -59,16 +31,17 @@ void ESBuddy::ledBarWrite(int val)
 
 void ESBuddy::dumpState(Print &printer)
 {
-    printer.print("ESBuddy: button=");
+    printer.println("ESBuddy:");
 
-    printer.println(this->buttonRead() ? "pressed" : "released");
+    printer.print("  button=");
+    printer.println(this->buttonRead() ? "DOWN" : "up");
 
     printer.print("  potLo=");
     printer.print(this->potLoRead());
     printer.print("/");
-    printer.print(this->potLoReadRaw());
+    printer.println(this->potLoReadRaw());
 
-    printer.print(", potUp=");
+    printer.print("  potUp=");
     printer.print(this->potUpRead());
     printer.print("/");
     printer.println(this->potUpReadRaw());

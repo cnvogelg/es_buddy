@@ -7,6 +7,8 @@ a TFT or OLED display via SPI and a rotary encoder board for extended input.
 
 You can combine these boards as you like.
 
+Licensed by Creative Commons Attribution Share Alike 4.0 International
+
 ## Teensy 4.0 Adapter v1.1
 
 This little adapter board allows to use a Teensy 4.0 board on your EuroShield 1 (short ES) eurorack module.

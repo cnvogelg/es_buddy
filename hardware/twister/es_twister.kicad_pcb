@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 22)
+    (drawings 23)
     (tracks 330)
     (zones 0)
     (modules 4)
@@ -11,8 +11,8 @@
 
   (page A4)
   (layers
-    (0 F.Cu signal)
-    (31 B.Cu signal)
+    (0 F.Cu signal hide)
+    (31 B.Cu signal hide)
     (32 B.Adhes user hide)
     (33 F.Adhes user hide)
     (34 B.Paste user hide)
@@ -389,6 +389,9 @@
     )
   )
 
+  (gr_text "CC-BY-SA\n4.0" (at 142.24 97.155) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
   (gr_line (start 135.89 69.85) (end 153.67 69.85) (layer B.SilkS) (width 0.12) (tstamp 5F80D7B1))
   (gr_line (start 153.67 69.85) (end 153.67 105.41) (layer B.SilkS) (width 0.12) (tstamp 5F80D7B0))
   (gr_line (start 153.67 105.41) (end 135.89 105.41) (layer B.SilkS) (width 0.12) (tstamp 5F80D7AF))
@@ -400,7 +403,7 @@
     (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
   )
   (gr_line (start 132.08 106.68) (end 154.94 106.68) (layer Edge.Cuts) (width 0.05))
-  (gr_text "EuroShield\nTwister Buddy" (at 142.24 87.63 270) (layer F.SilkS)
+  (gr_text "EuroShield\nTwister Buddy" (at 142.24 85.725 270) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text "2o2o\nlallafa\nRev 1.0" (at 142.24 73.66) (layer F.SilkS)

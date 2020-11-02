@@ -8,7 +8,7 @@ EuroShield Buddy PCB Boards and Arduino Library.
 
   - [Teensy 4.0 Adapter](#teensy-40-adapter)
   - [Rotary Encoder Buddy Board](#rotary-encoder-buddy-board)
-  - [LCD/OLED Display Buddy Board](#lcd/oled-display-buddy-board)
+  - [LCD/OLED Display Buddy Board](#lcdoled-display-buddy-board)
   - [Twister Buddy Board](#twister-buddy-board)
 
 You can combine these boards as you like.

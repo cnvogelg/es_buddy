@@ -94,6 +94,7 @@ public:
     bool buttonRead() { return digitalRead(ES_BUTTON_PIN) == LOW; }
 
     void dumpState(Print &printer);
+    void dumpAudioState(Print &printer);
 
     // Print support
     virtual size_t write(uint8_t c)  { return Serial.write(c); }

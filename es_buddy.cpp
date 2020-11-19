@@ -49,3 +49,12 @@ void ESBuddy::dumpState(Print &printer)
     printer.print("  encoder=");
     printer.println(this->encoderRead());
 }
+
+void ESBuddy::dumpAudioState(Print &printer)
+{
+    printer.println("AudioState:");
+    printer.print("  proc=");
+    printer.println(AudioProcessorUsage());
+    printer.print("  max=");
+    printer.println(AudioProcessorUsageMax());
+}

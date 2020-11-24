@@ -5,6 +5,8 @@
 #include <Audio.h>
 #include <Encoder.h>
 
+#include "drawable.h"
+
 // TFT Support
 #ifdef ES_HAVE_TFT
 #include <ST7735_t3.h>
@@ -80,8 +82,8 @@ public:
     AudioStream &audioInput() { return _audioInput; }
     AudioStream &audioOutput() { return _audioOutput; }
 
-    int encoderRead() { return _encoder.read(); }
-    int encoderReadAndReset() { return _encoder.readAndReset(); }
+    int encoderRawRead() { return _encoder.read(); }
+    int encoderRead();
 
     int potLoReadRaw() { return analogRead(ES_POT_LO_PIN); }
     int potUpReadRaw() { return analogRead(ES_POT_UP_PIN); }
@@ -108,6 +110,7 @@ private:
     AudioControlSGTL5000   _audioShield;
 
     Encoder                _encoder;
+    int                    _enc_val;
 
     const int led_pins[4] = {
         ES_LED1_PIN, ES_LED2_PIN, ES_LED3_PIN, ES_LED4_PIN
@@ -115,7 +118,11 @@ private:
 };
 
 #ifdef ES_HAVE_TFT
-class ESBuddyTFT : public ESBuddy
+
+#define DISPLAY_WIDTH   160
+#define DISPLAY_HEIGHT  128
+
+class ESBuddyTFT : public ESBuddy, public Display
 {
 public:
     ESBuddyTFT() : 
@@ -136,23 +143,28 @@ public:
         _tftDisplay.initR(INITR_BLACKTAB);
         _tftDisplay.setRotation(3);
         _tftDisplay.fillScreen(ST7735_BLACK);
+
+        _penColor = ST7735_WHITE;
     }
 
     ST7735_t3 &display() { return _tftDisplay; }
 
-    void displayClear() { 
+    virtual void displayClear() { 
         _tftDisplay.useFrameBuffer(true);
         _tftDisplay.fillScreen(ST7735_BLACK);
-        home();
+        homeCursor();
     }
-    void displayUpdate() { _tftDisplay.updateScreen(); }
+    virtual void displayUpdate() { _tftDisplay.updateScreen(); }
 
-    void home() { _tftDisplay.setCursor(0,0); }
-    void setCursor(int x, int y) {
+    virtual void homeCursor() { _tftDisplay.setCursor(0,0); }
+    virtual void setCursor(int x, int y) {
         _tftDisplay.setCursor(
-            x * _tftDisplay.getTextSizeX(),
-            y * _tftDisplay.getTextSizeY() );
+            x * _tftDisplay.getTextSizeX() * 8,
+            y * _tftDisplay.getTextSizeY() * 8);
     }
+    virtual int getMaxCursorX() { return 19; }
+    virtual int getMaxCursorY() { return 15; }
+    virtual Print &getPrint() { return *this; }
 
     // Print support
     virtual size_t write(uint8_t c)  { return _tftDisplay.write(c); }
@@ -160,13 +172,29 @@ public:
         return _tftDisplay.write(buffer, size);
     }
 
+    // Drawable
+    virtual void setColor(uint16_t color) { _penColor = color; }
+    virtual void vline(int x, int y, int h) {
+        _tftDisplay.drawFastVLine(x, y, h, _penColor);
+    }
+    virtual void hline(int x, int y, int w) {
+        _tftDisplay.drawFastHLine(x, y, w, _penColor);
+    }
+    virtual void line(int x1, int y1, int x2, int y2) {
+        _tftDisplay.drawLine(x1, y1, x2, y2, _penColor);
+    }
+    virtual void pixel(int x, int y) {
+        _tftDisplay.drawPixel(x, y, _penColor);
+    }
+
 private:
     ST7735_t3 _tftDisplay;
+    uint16_t  _penColor;
 };
 #endif // ES_HAVE_TFT
 
 #ifdef ES_HAVE_OLED
-class ESBuddyOLED : public ESBuddy
+class ESBuddyOLED : public ESBuddy, public Drawable
 {
 public:
     ESBuddyOLED() :
@@ -203,6 +231,18 @@ public:
     virtual size_t write(uint8_t c)  { return _oledDisplay.write(c); }
     virtual size_t write(const uint8_t *buffer, size_t size) {
         return _oledDisplay.write(buffer, size);
+    }
+
+    // Drawable
+    virtual void setColor(uint16_t color) {}
+    virtual void vline(int x, int y, int h) {
+        _oledDisplay.drawFastVLine(x, y, h);
+    }
+    virtual void hline(int x, int y, int w) {
+        _oledDisplay.drawFastHLine(x, y, w);
+    }
+    virtual void line(int x1, int y1, int x2, int y2) {
+        _oleDisplay.drawLine(x1, y1, x2, y2);
     }
 
 private:

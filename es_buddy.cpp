@@ -3,7 +3,8 @@
 const int myInput = AUDIO_INPUT_LINEIN;
 
 ESBuddy::ESBuddy()
-    : _encoder(ES_ROTARY_ENCA_PIN, ES_ROTARY_ENCB_PIN)
+    : _encoder(ES_ROTARY_ENCB_PIN, ES_ROTARY_ENCA_PIN),
+      _enc_val(0)
 {}
 
 void ESBuddy::init(float volume)
@@ -21,6 +22,18 @@ void ESBuddy::init(float volume)
     _audioShield.volume(volume);
 }
 
+int ESBuddy::encoderRead()
+{
+    int val = _encoder.read();
+    if(val == _enc_val) {
+        return 0;
+    } else {
+        int steps = (val - _enc_val) / 4;
+        _enc_val += steps * 4;
+        return steps;
+    }
+}
+
 void ESBuddy::ledBarWrite(int val)
 {
     digitalWrite(ES_LED1_PIN, (val & 1)== 1 ? HIGH : LOW);
@@ -34,20 +47,20 @@ void ESBuddy::dumpState(Print &printer)
     printer.println("ESBuddy:");
 
     printer.print("  button=");
-    printer.println(this->buttonRead() ? "DOWN" : "up");
+    printer.println(buttonRead() ? "DOWN" : "up");
 
     printer.print("  potLo=");
-    printer.print(this->potLoRead());
+    printer.print(potLoRead());
     printer.print("/");
-    printer.println(this->potLoReadRaw());
+    printer.println(potLoReadRaw());
 
     printer.print("  potUp=");
-    printer.print(this->potUpRead());
+    printer.print(potUpRead());
     printer.print("/");
-    printer.println(this->potUpReadRaw());
+    printer.println(potUpReadRaw());
 
     printer.print("  encoder=");
-    printer.println(this->encoderRead());
+    printer.println(encoderRead());
 }
 
 void ESBuddy::dumpAudioState(Print &printer)

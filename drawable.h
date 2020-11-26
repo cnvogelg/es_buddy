@@ -23,6 +23,10 @@ public:
     virtual int getMaxCursorY() = 0;
     virtual Print &getPrint() = 0;
 
+    virtual void setTextColor(uint16_t fg, uint16_t bg);
+    virtual void setTextColor(uint16_t fg);
+    virtual void setTextSize(uint8_t sx, uint8_t sy);
+
     virtual void setColor(uint16_t color) = 0;
     virtual void line(int x1, int y1, int x2, int y2) = 0;
     virtual void vline(int x, int y, int h) = 0;

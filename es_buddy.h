@@ -166,6 +166,16 @@ public:
     virtual int getMaxCursorY() { return 15; }
     virtual Print &getPrint() { return *this; }
 
+    virtual void setTextColor(uint16_t fg, uint16_t bg) {
+        _tftDisplay.setTextColor(fg, bg);
+    }
+    virtual void setTextColor(uint16_t fg) {
+        _tftDisplay.setTextColor(fg);
+    }
+    virtual void setTextSize(uint8_t sx, uint8_t sy) {
+        _tftDisplay.setTextSize(sx, sy);
+    }
+
     // Print support
     virtual size_t write(uint8_t c)  { return _tftDisplay.write(c); }
     virtual size_t write(const uint8_t *buffer, size_t size) {

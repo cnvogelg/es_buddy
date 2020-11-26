@@ -4,33 +4,36 @@
 #include "Arduino.h"
 #include "AudioStream.h"
 
+#include "sample_array.h"
+
 class AudioAnalyzeAvgArray : public AudioStream
 {
 public:
 	enum TriggerMode { RISE, FALL };
 
-	AudioAnalyzeAvgArray(int num_samples, int16_t *samples) 
+	AudioAnalyzeAvgArray() 
 		: AudioStream(1, _inputQueueArray) 
 	{
-		_num_samples = num_samples;
-		_samples = samples;
 		_window_size = 1;
 		_state = State::DONE;
 		_trigger_value = 0;
 		_trigger_mode = TriggerMode::RISE;
 		_trigger_timeout = 44100 * 20 / 1000; // samples for 20ms
+		_samples = nullptr;
 	}
 
-	int numSamples() { return _num_samples; }
-	int16_t *samples() { return _samples; }
+	SampleArray *getSmpleArray() { return _samples; }
 	int getWindowSize() { return _window_size; }
 	int getTriggerValue() { return _trigger_value; }
 	TriggerMode getTriggerMode() { return _trigger_mode; }
 
-	void begin(void) {
-		__disable_irq();
-		reset();
-		__enable_irq();
+	void begin(SampleArray *samples) {
+		if(samples != nullptr) {
+			__disable_irq();
+			_samples = samples;
+			reset();
+			__enable_irq();
+		}
 	}
 
 	bool available(void) {
@@ -82,9 +85,8 @@ private:
 	}
 
 	audio_block_t *_inputQueueArray[1];
-	int _num_samples;
 	int _window_size;
-	int16_t *_samples;
+	SampleArray *_samples;
 	int _trigger_value;
 	TriggerMode _trigger_mode;
 	int _trigger_timeout;

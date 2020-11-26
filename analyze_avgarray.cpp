@@ -54,11 +54,11 @@ void AudioAnalyzeAvgArray::update(void)
                 _window_pos ++;
                 if(_window_pos == _window_size) {
                     // calc and store avg
-                    _samples[_sample_idx] = _cur_sum / _window_size;
+                    _samples->buffer()[_sample_idx] = _cur_sum / _window_size;
                     // prepare next sample
                     _sample_idx++;
                     // sample buffer filled completely
-                    if(_sample_idx == _num_samples) {
+                    if(_sample_idx == _samples->size()) {
                         _state = State::DONE;
                     }
                     else {

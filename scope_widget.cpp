@@ -22,11 +22,12 @@ void ScopeWidget::drawGrid(Drawable &d)
     }
 }
 
-void ScopeWidget::drawSamples(Drawable &d, int num_samples, int16_t *samples, 
-    int16_t color)
+void ScopeWidget::drawSamples(Drawable &d, SampleArray &array, int16_t color)
 {
     int x = _x;
     int old_y_avg;
+    int num_samples = array.size();
+    int16_t *samples = array.buffer();
 
     // draw wave form
     d.setColor(color);

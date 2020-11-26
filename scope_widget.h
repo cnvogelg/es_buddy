@@ -1,8 +1,9 @@
 #ifndef SCOPE_WIDGET_H
 #define SCOPE_WIDGET_H
 
+#include <vector>
 #include "widget.h"
-#include "analyze_avgarray.h"
+#include "sample_array.h"
 
 class ScopeWidget : public Widget
 {
@@ -35,13 +36,10 @@ public:
         return _grid_unit_ms;
     }
 
-    void drawSamples(Drawable &d, int num_samples, int16_t *samples, int16_t color);
+    void drawSamples(Drawable &d, SampleArray &array, int16_t color);
     void drawGrid(Drawable &d);
 
 private:
-    int _num_samples;
-    int16_t *_samples;
-
     int _window_size;
     int _grid_w;
     int _grid_unit_ms;

@@ -11,36 +11,47 @@ class AudioAnalyzeAvgArray : public AudioStream
 public:
 	enum TriggerMode { RISE, FALL };
 
-	AudioAnalyzeAvgArray() 
-		: AudioStream(1, _inputQueueArray) 
+	AudioAnalyzeAvgArray(int size) 
+		: AudioStream(1, _inputQueueArray),
+		  _sample_buffers{size,size}
 	{
 		_window_size = 1;
 		_state = State::DONE;
 		_trigger_value = 0;
 		_trigger_mode = TriggerMode::RISE;
 		_trigger_timeout = 44100 * 20 / 1000; // samples for 20ms
-		_samples = nullptr;
+		_active_buffer = 0;
+		_num_samples = size;
+		_active_samples = _sample_buffers[0].buffer();
 	}
 
-	SampleArray *getSmpleArray() { return _samples; }
 	int getWindowSize() { return _window_size; }
 	int getTriggerValue() { return _trigger_value; }
 	TriggerMode getTriggerMode() { return _trigger_mode; }
 
-	void begin(SampleArray *samples) {
-		if(samples != nullptr) {
-			__disable_irq();
-			_samples = samples;
-			reset();
-			__enable_irq();
-		}
+	void begin() {
+		__disable_irq();
+		reset();
+		__enable_irq();
 	}
 
-	bool available(void) {
+	SampleArray &getArray(void) {
 		__disable_irq();
-		bool flag = (_state == State::DONE);
+		int buffer_idx = _active_buffer;
+		// active buffer is filled?
+		if(_state == State::DONE) {
+			// return currently filled buffer and restart with other buffer
+			_active_buffer = 1 - _active_buffer;
+			_active_samples = _sample_buffers[_active_buffer].buffer();
+			// retrigger
+			reset();
+		} else {
+			// return inactive buffer for now
+			buffer_idx = 1 - buffer_idx;
+		}
 		__enable_irq();
-		return flag;
+		// always return the inactive buffe
+		return _sample_buffers[buffer_idx];
 	}
 
 	void stop(void) {
@@ -86,13 +97,16 @@ private:
 
 	audio_block_t *_inputQueueArray[1];
 	int _window_size;
-	SampleArray *_samples;
+	int _num_samples;
+	SampleArray _sample_buffers[2];
 	int _trigger_value;
 	TriggerMode _trigger_mode;
 	int _trigger_timeout;
 	enum State { FIRST_SAMPLE, CHECK_TRIGGER, RECORD, DONE };
 
 	// state
+	int16_t *_active_samples;
+	int _active_buffer;
 	int _sample_idx;
 	int _window_pos;
 	State _state; 

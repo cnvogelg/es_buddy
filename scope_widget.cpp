@@ -1,6 +1,68 @@
 #include <Arduino.h>
 #include "scope_widget.h"
 
+AudioStream *ScopeWidget::addAudioStream(int16_t color)
+{
+    if(_numChannels == MAX_CHANNELS) {
+        return nullptr;
+    }
+
+    AudioAnalyzeAvgArray *result = new AudioAnalyzeAvgArray(_w);
+    if(result == nullptr) {
+        return nullptr;
+    }
+
+    _channels[_numChannels] = result;
+    _colors[_numChannels] = color;
+    _numChannels++;
+
+    return result;
+}
+
+void ScopeWidget::init()
+{
+    for(int i=0;i<_numChannels;i++) {
+        _channels[i]->begin();
+    }    
+}
+
+void ScopeWidget::exit()
+{
+    for(int i=0;i<_numChannels;i++) {
+        _channels[i]->stop();
+    }    
+}
+
+void ScopeWidget::setWindowSize(int windowSize) {
+    _window_size = windowSize;
+    // how many ms are displayed in widget?
+    int total_ms = windowSize * _w * 1000 / 44100;
+    if(total_ms > 100) {
+        _grid_unit_ms = 100; // 100 ms grid
+    }
+    else if(total_ms > 10) {
+        _grid_unit_ms = 10; // 10 ms grid
+    }
+    else {
+        _grid_unit_ms = 1;
+    }
+
+    // how many pixels are n ms in scope display?
+    _grid_w = _grid_unit_ms * 44100 / (windowSize * 1000); 
+
+    for(int i=0;i<_numChannels;i++) {
+        _channels[i]->setWindowSize(windowSize);
+    }
+}
+
+void ScopeWidget::draw(Drawable &d)
+{
+    drawGrid(d);
+    for(int i=0;i<_numChannels;i++) {
+        drawSamples(d, _channels[i]->getArray(), _colors[i]);
+    }
+}
+
 void ScopeWidget::drawGrid(Drawable &d)
 {
     // draw grid

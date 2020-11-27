@@ -13,6 +13,8 @@ public:
         _buffer = array._buffer;
     }
 
+    SampleArray(SampleArray &array) = delete;
+
     ~SampleArray() {
         free(_buffer);
     }

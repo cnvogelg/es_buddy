@@ -1,49 +1,48 @@
 #ifndef SCOPE_WIDGET_H
 #define SCOPE_WIDGET_H
 
-#include <vector>
 #include "widget.h"
 #include "sample_array.h"
+#include "analyze_avgarray.h"
 
 class ScopeWidget : public Widget
 {
 public:
-    ScopeWidget(int x, int y, int w, int h, int window_size=1)
+    ScopeWidget(int x, int y, int w, int h, int windowSize=1)
         : Widget(x, y, w, h)
     {
-        setWindowSize(window_size);
+        setWindowSize(windowSize);
     }
 
-    void setWindowSize(int window_size) {
-        _window_size = window_size;
-        // how many ms are displayed in widget?
-        int total_ms = window_size * _w * 1000 / 44100;
-        if(total_ms > 100) {
-            _grid_unit_ms = 100; // 100 ms grid
-        }
-        else if(total_ms > 10) {
-            _grid_unit_ms = 10; // 10 ms grid
-        }
-        else {
-            _grid_unit_ms = 1;
-        }
+    AudioStream *addAudioStream(int16_t color);
 
-        // how many pixels are n ms in scope display?
-        _grid_w = _grid_unit_ms * 44100 / (window_size * 1000); 
+    void setWindowSize(int windowSize);
+    int getWindowSize() {
+        return _window_size;
     }
 
     int getGridUnitMs() {
         return _grid_unit_ms;
     }
 
-    void drawSamples(Drawable &d, SampleArray &array, int16_t color);
-    void drawGrid(Drawable &d);
+    virtual void init();
+    virtual void draw(Drawable &d);
+    virtual void exit();
 
 private:
     int _window_size;
     int _grid_w;
     int _grid_unit_ms;
- 
+
+    static const int MAX_CHANNELS = 4;
+    int _numChannels = 0;
+
+    AudioAnalyzeAvgArray *_channels[MAX_CHANNELS];
+    int16_t _colors[MAX_CHANNELS];
+
+    void drawSamples(Drawable &d, SampleArray &array, int16_t color);
+    void drawGrid(Drawable &d);
+
     int map_sample_value(int16_t val)
     {
         int out = _y + _h - 1 - (val + 32768) * _h / 65536;

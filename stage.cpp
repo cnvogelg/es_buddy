@@ -15,34 +15,23 @@ void Stage::render()
         }
     }
 
-    bool do_draw = true;
-    if(s != nullptr) {
-        do_draw = s->preDraw();
-    }
-
     // render current scene
-    if(do_draw) {
-        unsigned long start = millis();
-        _display.displayClear();
-        if(s != nullptr) {
-            s->draw(_display);
-        }
-        if(_debug) {
-            drawDebugStatus();
-        }
-        _display.displayUpdate();
-        unsigned long end = millis();
-
-        // update state
-        _last_frame_ms = end - start;
-        _last_delta_ms = start - _last_start;
-        _last_end = end;
-        _last_start = start;
-    }
-
+    unsigned long start = millis();
+    _display.displayClear();
     if(s != nullptr) {
-        s->postDraw(do_draw);
+        s->draw(_display);
     }
+    if(_debug) {
+        drawDebugStatus();
+    }
+    _display.displayUpdate();
+    unsigned long end = millis();
+
+    // update state
+    _last_frame_ms = end - start;
+    _last_delta_ms = start - _last_start;
+    _last_end = end;
+    _last_start = start;
 }
 
 void Stage::drawDebugStatus()

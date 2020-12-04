@@ -8,8 +8,8 @@
 class ScopeWidget : public Widget
 {
 public:
-    ScopeWidget(int x, int y, int w, int h, int windowSize=1)
-        : Widget(x, y, w, h)
+    ScopeWidget(const Geo &geo, int windowSize=1)
+        : Widget(geo)
     {
         setWindowSize(windowSize);
     }
@@ -26,7 +26,7 @@ public:
     }
 
     virtual void init();
-    virtual void draw(Drawable &d);
+    virtual void draw(Drawable &d, bool hilite);
     virtual void exit();
 
 private:
@@ -45,12 +45,12 @@ private:
 
     int map_sample_value(int16_t val)
     {
-        int out = _y + _h - 1 - (val + 32768) * _h / 65536;
-        if(out < _y) {
-            return _y;
+        int out = _geo.y2() - (val + 32768) * _geo.h() / 65536;
+        if(out < _geo.y()) {
+            return _geo.y();
         }
-        else if(out >= (_y + _h)) {
-            return _y + _h - 1;
+        else if(out >= _geo.y2()) {
+            return _geo.y2();
         }
         else {
             return out;

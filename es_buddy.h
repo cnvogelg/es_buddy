@@ -119,12 +119,12 @@ private:
 
 #ifdef ES_HAVE_TFT
 
-#define DISPLAY_WIDTH   160
-#define DISPLAY_HEIGHT  128
-
 class ESBuddyTFT : public ESBuddy, public Display
 {
 public:
+    static const int DISPLAY_WIDTH = 160;
+    static const int DISPLAY_HEIGHT = 128;
+
     ESBuddyTFT() : 
         ESBuddy(),
         _tftDisplay(
@@ -157,13 +157,16 @@ public:
     virtual void displayUpdate() { _tftDisplay.updateScreen(); }
 
     virtual void homeCursor() { _tftDisplay.setCursor(0,0); }
-    virtual void setCursor(int x, int y) {
+    virtual void setCursor(int col, int row) {
         _tftDisplay.setCursor(
-            x * _tftDisplay.getTextSizeX() * 8,
-            y * _tftDisplay.getTextSizeY() * 8);
+            col * _tftDisplay.getTextSizeX() * 8,
+            row * _tftDisplay.getTextSizeY() * 8);
     }
-    virtual int getMaxCursorX() { return 19; }
-    virtual int getMaxCursorY() { return 15; }
+    virtual void setCursorXY(int x, int y) {
+        _tftDisplay.setCursor(x, y);
+    }
+    virtual int getMaxCursorCol() { return DISPLAY_WIDTH / _tftDisplay.getTextSizeX(); }
+    virtual int getMaxCursorRow() { return DISPLAY_HEIGHT / _tftDisplay.getTextSizeY(); }
     virtual Print &getPrint() { return *this; }
 
     virtual void setTextColor(uint16_t fg, uint16_t bg) {
@@ -172,9 +175,11 @@ public:
     virtual void setTextColor(uint16_t fg) {
         _tftDisplay.setTextColor(fg);
     }
-    virtual void setTextSize(uint8_t sx, uint8_t sy) {
+    virtual void setTextScale(uint8_t sx, uint8_t sy) {
         _tftDisplay.setTextSize(sx, sy);
     }
+    virtual int getTextSizeX() { return _tftDisplay.getTextSizeX(); }
+    virtual int getTextSizeY() { return _tftDisplay.getTextSizeY(); }
 
     // Print support
     virtual size_t write(uint8_t c)  { return _tftDisplay.write(c); }
@@ -195,6 +200,15 @@ public:
     }
     virtual void pixel(int x, int y) {
         _tftDisplay.drawPixel(x, y, _penColor);
+    }
+    virtual void fillRect(int x, int y, int w, int h)
+    {
+        _tftDisplay.fillRect(x, y, w, h, _penColor);
+    }
+
+    virtual void drawRect(int x, int y, int w, int h)
+    {
+        _tftDisplay.drawRect(x, y, w, h, _penColor);
     }
 
 private:

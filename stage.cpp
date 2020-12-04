@@ -37,10 +37,10 @@ void Stage::render()
 void Stage::drawDebugStatus()
 {
     _display.setTextColor(COLOR_WHITE);
-    _display.setTextSize(1,1);
+    _display.setTextScale(1,1);
 
-    int _mx = _display.getMaxCursorX() - 6;
-    int _my = _display.getMaxCursorY();
+    int _mx = _display.getMaxCursorCol() - 6;
+    int _my = _display.getMaxCursorRow();
     Print &p = _display.getPrint();
     _display.setCursor(_mx, _my);
     p.print("fms=");

@@ -7,7 +7,7 @@ AudioStream *ScopeWidget::addAudioStream(int16_t color)
         return nullptr;
     }
 
-    AudioAnalyzeAvgArray *result = new AudioAnalyzeAvgArray(_w);
+    AudioAnalyzeAvgArray *result = new AudioAnalyzeAvgArray(_geo.w());
     if(result == nullptr) {
         return nullptr;
     }
@@ -36,7 +36,7 @@ void ScopeWidget::exit()
 void ScopeWidget::setWindowSize(int windowSize) {
     _window_size = windowSize;
     // how many ms are displayed in widget?
-    int total_ms = windowSize * _w * 1000 / 44100;
+    int total_ms = windowSize * _geo.w() * 1000 / 44100;
     if(total_ms > 100) {
         _grid_unit_ms = 100; // 100 ms grid
     }
@@ -55,11 +55,15 @@ void ScopeWidget::setWindowSize(int windowSize) {
     }
 }
 
-void ScopeWidget::draw(Drawable &d)
+void ScopeWidget::draw(Drawable &d, bool hilite)
 {
     drawGrid(d);
     for(int i=0;i<_numChannels;i++) {
         drawSamples(d, _channels[i]->getArray(), _colors[i]);
+    }
+    if(hilite) {
+        setHiliteColor(d);
+        drawBorder(d);
     }
 }
 
@@ -68,17 +72,17 @@ void ScopeWidget::drawGrid(Drawable &d)
     // draw grid
     d.setColor(COLOR_GRAY);
     drawBorder(d);
-    int y_mid = _y + _h / 2;
-    d.hline(_x, y_mid, _w);
-    int y_quart = _h / 4;
-    d.hline(_x, y_mid - y_quart, _w);
-    d.hline(_x, y_mid + y_quart, _w);
+    int y_mid = _geo.y() + _geo.h() / 2;
+    d.hline(_geo.x(), y_mid, _geo.w());
+    int y_quart = _geo.h() / 4;
+    d.hline(_geo.x(), y_mid - y_quart, _geo.w());
+    d.hline(_geo.x(), y_mid + y_quart, _geo.w());
 
     // draw ms grid
     if(_grid_w > 2) {
         int x = _grid_w;
-        while(x < _w) {
-            d.vline(_x + x, _y, _h);
+        while(x < _geo.w()) {
+            d.vline(_geo.x() + x, _geo.y(), _geo.h());
             x += _grid_w;
         }
     }
@@ -86,7 +90,7 @@ void ScopeWidget::drawGrid(Drawable &d)
 
 void ScopeWidget::drawSamples(Drawable &d, SampleArray &array, int16_t color)
 {
-    int x = _x;
+    int x = _geo.x();
     int old_y_avg;
     int num_samples = array.size();
     int16_t *samples = array.buffer();
@@ -94,7 +98,7 @@ void ScopeWidget::drawSamples(Drawable &d, SampleArray &array, int16_t color)
     // draw wave form
     d.setColor(color);
     for(int i=0;i<num_samples;i++) {
-        if(i == _w) {
+        if(i == _geo.w()) {
             break;
         }
 

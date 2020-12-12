@@ -22,6 +22,8 @@ public:
     virtual void draw(Drawable &d);
     virtual void leaveScene();
 
+    virtual void handleEvent(const Event &e);
+
 protected:
     const char *_name;
     const std::vector<Widget *> _widgets;

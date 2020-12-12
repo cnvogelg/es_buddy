@@ -34,9 +34,7 @@ public:
         }
     }
 
-    void handle() {
-        _renderer.renderScene(_active_scene);
-    }
+    void handle();
 
 private:
     SceneRenderer _renderer;

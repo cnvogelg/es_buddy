@@ -72,13 +72,19 @@ public:
         }
     }
 
-    void incValue() {
-        Scalar value = this->getValue() + _step;
+    void incValue(int num=1) {
+        Scalar value = this->getValue() + (_step * num);
+        if(value > _maxValue) {
+            value = _maxValue;
+        }
         setValue(value);
     }
 
-    void decValue() {
-        Scalar value = this->getValue() - _step;
+    void decValue(int num=1) {
+        Scalar value = this->getValue() - (_step * num);
+        if(value < _minValue) {
+            value = _minValue;
+        }
         setValue(value);
     }
 

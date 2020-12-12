@@ -35,15 +35,19 @@ public:
         RangeParam<Scalar> *param)
     : TextParamWidget<Scalar>(geo, title, param),
       _rangeParam(param)
-    {}
+    {
+        Widget::setControl(this);
+    }
 
-    virtual void handleEvent(const ControlEvent &ce) {
-        switch(ce) {
-            case ControlEvent::INC_VALUE:
-                _rangeParam->incValue();
+    virtual void handleEvent(const Event &e) {
+        switch(e.type) {
+            case EventType::INC_VALUE:
+                _rangeParam->incValue(e.value);
                 break;
-            case ControlEvent::DEC_VALUE:
-                _rangeParam->decValue();
+            case EventType::DEC_VALUE:
+                _rangeParam->decValue(e.value);
+                break;
+            default:
                 break;
         }
     }

@@ -33,3 +33,13 @@ void Scene::setDefaultActiveWidget()
         }
     }
 }
+
+void Scene::handleEvent(const Event &e)
+{
+    if(_activeWidget != nullptr) {
+        Control *c = _activeWidget->getControl();
+        if(c != nullptr) {
+            c->handleEvent(e);
+        }
+    }
+}

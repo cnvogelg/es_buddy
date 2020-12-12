@@ -77,10 +77,12 @@ bool ESBuddy::pollEvent(Event &e)
     if(delta < 0) {
         e.type = EventType::DEC_VALUE;
         e.value = -delta;
+        return true;
     }
     else if(delta > 0) {
         e.type = EventType::INC_VALUE;
         e.value = delta;
+        return true;
     }
 
     return false;

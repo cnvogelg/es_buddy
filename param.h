@@ -7,8 +7,9 @@ template<typename Type>
 class Param
 {
 public:
-    Param(Type defaultValue)
-    : _defaultValue(defaultValue), _value(defaultValue)
+    Param(Type defaultValue, const char *unitsStr=nullptr)
+    : _defaultValue(defaultValue), _value(defaultValue),
+      _unitsStr(unitsStr)
     {}
     
     void setSetter(std::function<void(Type)> setter)
@@ -24,6 +25,7 @@ public:
     void reset() { setValue(_defaultValue); }
 
     Type getDefaultValue() { return _defaultValue; }
+    const char *getUnitsString() { return _unitsStr; }
 
     Type getValue() 
     {
@@ -44,17 +46,19 @@ public:
 protected:
     Type _defaultValue;
     Type _value;
+    const char *_unitsStr;
 
     std::function<void(Type)> _setter;
     std::function<Type(void)> _getter;
 };
 
 template<typename Scalar>
-class ScalarParam : public Param<Scalar>
+class RangeParam : public Param<Scalar>
 {
 public:
-    ScalarParam(Scalar defaultValue, Scalar minValue, Scalar maxValue, Scalar step)
-    : Param<Scalar>(defaultValue),
+    RangeParam(Scalar defaultValue, Scalar minValue, Scalar maxValue, Scalar step,
+        const char *unitsStr=nullptr)
+    : Param<Scalar>(defaultValue, unitsStr),
       _minValue(minValue), _maxValue(maxValue), _step(step)
     {}
 
@@ -84,7 +88,9 @@ protected:
     Scalar _step;
 };
 
-using IntParam = ScalarParam<int>;
-using FloatParam = ScalarParam<float>;
+using IntParam = Param<int>;
+using FloatParam = Param<float>;
+using IntRangeParam = RangeParam<int>;
+using FloatRangeParam = RangeParam<float>;
 
 #endif

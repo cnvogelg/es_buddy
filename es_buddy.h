@@ -4,8 +4,10 @@
 #include <Arduino.h>
 #include <Audio.h>
 #include <Encoder.h>
+#include <Bounce.h>
 
 #include "drawable.h"
+#include "event.h"
 
 // TFT Support
 #ifdef ES_HAVE_TFT
@@ -72,7 +74,9 @@
 #define ES_MIDI_OUT_PIN         1
 
 
-class ESBuddy : public Print
+enum class ButtonState { RISE, FALL, NONE };
+
+class ESBuddy : public Print, public EventSource
 {
 public:
     ESBuddy();
@@ -82,8 +86,9 @@ public:
     AudioStream &audioInput() { return _audioInput; }
     AudioStream &audioOutput() { return _audioOutput; }
 
-    int encoderRawRead() { return _encoder.read(); }
     int encoderRead();
+    ButtonState buttonRead();
+    bool isButtonDown() { buttonRead(); return _buttonDown; }
 
     int potLoReadRaw() { return analogRead(ES_POT_LO_PIN); }
     int potUpReadRaw() { return analogRead(ES_POT_UP_PIN); }
@@ -93,7 +98,6 @@ public:
 
     void ledWrite(int num, bool on) { digitalWrite(led_pins[num], on ? HIGH : LOW); }
     void ledBarWrite(int val);
-    bool buttonRead() { return digitalRead(ES_BUTTON_PIN) == LOW; }
 
     void dumpState(Print &printer);
     void dumpAudioState(Print &printer);
@@ -104,13 +108,18 @@ public:
         return Serial.write(buffer, size);
     }
 
+    virtual bool pollEvent(Event &e);
+
 private:
     AudioInputI2S          _audioInput;  
     AudioOutputI2S         _audioOutput;  
     AudioControlSGTL5000   _audioShield;
 
     Encoder                _encoder;
-    int                    _enc_val;
+    int                    _encVal;
+    Bounce                 _button;
+    bool                   _buttonDown;  
+    unsigned long          _pressStart;
 
     const int led_pins[4] = {
         ES_LED1_PIN, ES_LED2_PIN, ES_LED3_PIN, ES_LED4_PIN

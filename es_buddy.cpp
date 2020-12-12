@@ -4,7 +4,8 @@ const int myInput = AUDIO_INPUT_LINEIN;
 
 ESBuddy::ESBuddy()
     : _encoder(ES_ROTARY_ENCB_PIN, ES_ROTARY_ENCA_PIN),
-      _enc_val(0)
+      _encVal(0),
+      _button(ES_BUTTON_PIN, 5)
 {}
 
 void ESBuddy::init(float volume)
@@ -25,13 +26,64 @@ void ESBuddy::init(float volume)
 int ESBuddy::encoderRead()
 {
     int val = _encoder.read();
-    if(val == _enc_val) {
+    if(val == _encVal) {
         return 0;
     } else {
-        int steps = (val - _enc_val) / 4;
-        _enc_val += steps * 4;
+        int steps = (val - _encVal) / 4;
+        _encVal += steps * 4;
         return steps;
     }
+}
+
+ButtonState ESBuddy::buttonRead() 
+{ 
+    _button.update();
+    if(_button.risingEdge()) {
+        _buttonDown = true;
+        return ButtonState::RISE;
+    } else if(_button.fallingEdge()) {
+        _buttonDown = false;
+        return ButtonState::FALL;
+    } else {
+        return ButtonState::NONE;
+    }
+}
+
+bool ESBuddy::pollEvent(Event &e)
+{
+    // check button
+    ButtonState state = buttonRead();
+    if(state == ButtonState::RISE) {
+        e.type = EventType::BUTTON_DOWN;
+        _pressStart = millis();
+        return true;
+    }
+    else if(state == ButtonState::FALL) {
+        e.type = EventType::BUTTON_UP;
+        return true;
+    }
+
+    // check long press
+    if(_buttonDown) {
+        unsigned long delta = millis() - _pressStart;
+        if(delta > 500) {
+            e.type = EventType::BUTTON_LONG_PRESS;
+            return true;
+        }
+    }
+
+    // check encoder
+    int delta = encoderRead();
+    if(delta < 0) {
+        e.type = EventType::DEC_VALUE;
+        e.value = -delta;
+    }
+    else if(delta > 0) {
+        e.type = EventType::INC_VALUE;
+        e.value = delta;
+    }
+
+    return false;
 }
 
 void ESBuddy::ledBarWrite(int val)
@@ -47,7 +99,18 @@ void ESBuddy::dumpState(Print &printer)
     printer.println("ESBuddy:");
 
     printer.print("  button=");
-    printer.println(buttonRead() ? "DOWN" : "up");
+    ButtonState state = buttonRead();
+    switch(state) {
+        case ButtonState::NONE:
+            printer.println("NONE");
+            break;
+        case ButtonState::RISE:
+            printer.println("RISE");
+            break;
+        case ButtonState::FALL:
+            printer.println("FALL");
+            break;
+    }
 
     printer.print("  potLo=");
     printer.print(potLoRead());

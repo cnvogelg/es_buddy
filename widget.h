@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include "drawable.h"
+#include "event.h"
 
 struct Pos {
     int x,y;
@@ -21,13 +22,23 @@ struct Geo {
     Geo(int x, int y, int w, int h)
     : pos{x,y}, size{w,h} {}
 
-    int x() { return pos.x; }
-    int y() { return pos.y; }
-    int w() { return size.w; }
-    int h() { return size.h; }
+    int x() const { return pos.x; }
+    int y() const { return pos.y; }
+    int w() const { return size.w; }
+    int h() const { return size.h; }
 
-    int x2() { return pos.x + size.w - 1; }
-    int y2() { return pos.y + size.h - 1; }
+    int x2() const { return pos.x + size.w - 1; }
+    int y2() const { return pos.y + size.h - 1; }
+};
+
+enum class ControlEvent {
+    INC_VALUE,
+    DEC_VALUE
+};
+
+class Control {
+public:
+    virtual void handleEvent(const ControlEvent &ce) = 0;
 };
 
 class Widget {
@@ -40,8 +51,12 @@ public:
     virtual void draw(Drawable &d, bool hilite) = 0;
     virtual void exit() {}
 
+    Control *getControl() { return _control; }
+    void setControl(Control *control) { _control = control; }
+
 protected:
     Geo _geo;
+    Control *_control;
 
     void drawBorder(Drawable &d) {
         d.drawRect(_geo.x(), _geo.y(), _geo.w(), _geo.h());

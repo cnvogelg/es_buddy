@@ -1,21 +1,24 @@
 #ifndef STAGE_H
 #define STAGE_H
 
+#include <vector>
+
 #include "drawable.h"
+#include "event.h"
 #include "scene.h"
+#include "scene_renderer.h"
 
 class Stage {
 public:
-    Stage(Display &display, int frame_ms=20, bool debug=false)
-        : _display(display),
-          _frame_ms(frame_ms),
-          _debug(debug),
+    Stage(Display &display, EventSource &eventSource, 
+        const std::vector<Scene *> &scenes, 
+        int frame_ms=20, bool debug=false)
+        : _renderer(display, frame_ms, debug),
+          _eventSource(eventSource),
+          _scenes(scenes),
           _active_scene(nullptr)
-    {}
-
-    void setDebug(bool debug)
     {
-        _debug = debug;
+        setActiveScene(scenes[0]);
     }
 
     void setActiveScene(Scene *scene)
@@ -31,21 +34,15 @@ public:
         }
     }
 
-    void render();
+    void handle() {
+        _renderer.renderScene(_active_scene);
+    }
 
 private:
-    Display &_display;
-    int _frame_ms;
-    bool _debug;
+    SceneRenderer _renderer;
+    EventSource &_eventSource;
+    const std::vector<Scene *> _scenes;
     Scene *_active_scene;
-
-    // state
-    unsigned long _last_frame_ms;
-    unsigned long _last_delta_ms;
-    unsigned long _last_end;
-    unsigned long _last_start;
-
-    void drawDebugStatus();
 };
 
 #endif

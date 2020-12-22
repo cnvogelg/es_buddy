@@ -22,6 +22,11 @@ public:
         _getter = getter;
     }
 
+    void setMapper(std::function<const char*(Type)> mapper)
+    {
+        _mapper = mapper;
+    }
+
     void reset() { setValue(_defaultValue); }
 
     Type getDefaultValue() { return _defaultValue; }
@@ -35,11 +40,26 @@ public:
         return _value;
     }
 
-    void setValue(Type value)
+    bool setValue(Type value)
     {
         _value = value;
         if(_setter) {
             _setter(value);
+        }
+        return true;
+    }
+
+    void setDefaultValue() 
+    {
+        setValue(_defaultValue);
+    }
+
+    const char *getMappedValue() {
+        if(_mapper) {
+            return _mapper(_value);
+        }
+        else {
+            return nullptr;
         }
     }
 
@@ -50,6 +70,7 @@ protected:
 
     std::function<void(Type)> _setter;
     std::function<Type(void)> _getter;
+    std::function<const char *(Type)> _mapper;
 };
 
 template<typename Scalar>
@@ -66,26 +87,29 @@ public:
     Scalar getMaxValue() { return _maxValue; }
     Scalar getStep() { return _step; }
 
-    void setValue(Scalar value) {
+    bool setValue(Scalar value) {
         if((value >= _minValue) && (value <= _maxValue)) {
             Param<Scalar>::setValue(value);
+            return true;
+        } else {
+            return false;
         }
     }
 
-    void incValue(int num=1) {
+    bool incValue(int num=1) {
         Scalar value = this->getValue() + (_step * num);
         if(value > _maxValue) {
             value = _maxValue;
         }
-        setValue(value);
+        return setValue(value);
     }
 
-    void decValue(int num=1) {
+    bool decValue(int num=1) {
         Scalar value = this->getValue() - (_step * num);
         if(value < _minValue) {
             value = _minValue;
         }
-        setValue(value);
+        return setValue(value);
     }
 
 protected:

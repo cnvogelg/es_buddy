@@ -19,7 +19,12 @@ protected:
     void printText(Print &p) 
     {
         TextWidget::printText(p);
-        p.print(_param->getValue());
+        const char *mappedValue = _param->getMappedValue();
+        if(mappedValue != nullptr) {
+            p.print(mappedValue);
+        } else {
+            p.print(_param->getValue());
+        }
         const char *units = _param->getUnitsString();
         if(units!=nullptr) {
             p.print(units);
@@ -39,15 +44,16 @@ public:
         Widget::setControl(this);
     }
 
-    virtual void handleEvent(const Event &e) {
-        switch(e.type) {
-            case EventType::INC_VALUE:
-                _rangeParam->incValue(e.value);
+    virtual void handleEvent(const ControlEvent &e) {
+        switch(e) {
+            case ControlEvent::INC_VALUE:
+                _rangeParam->incValue();
                 break;
-            case EventType::DEC_VALUE:
-                _rangeParam->decValue(e.value);
+            case ControlEvent::DEC_VALUE:
+                _rangeParam->decValue();
                 break;
-            default:
+            case ControlEvent::ACTIVATE:
+                _rangeParam->setDefaultValue();
                 break;
         }
     }

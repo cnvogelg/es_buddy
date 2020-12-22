@@ -120,6 +120,8 @@ private:
     Bounce                 _button;
     bool                   _buttonDown;  
     unsigned long          _pressStart;
+    bool                   _buttonLong;
+    bool                   _buttonExtraLong;
 
     const int led_pins[4] = {
         ES_LED1_PIN, ES_LED2_PIN, ES_LED3_PIN, ES_LED4_PIN
@@ -133,6 +135,9 @@ class ESBuddyTFT : public ESBuddy, public Display
 public:
     static const int DISPLAY_WIDTH = 160;
     static const int DISPLAY_HEIGHT = 128;
+
+    static const int FONT_WIDTH = 6;
+    static const int FONT_HEIGHT = 8;
 
     ESBuddyTFT() : 
         ESBuddy(),
@@ -165,17 +170,20 @@ public:
     }
     virtual void displayUpdate() { _tftDisplay.updateScreen(); }
 
+    virtual int getDisplayWidth() { return DISPLAY_WIDTH; }
+    virtual int getDisplayHeight() { return DISPLAY_HEIGHT; }
+
     virtual void homeCursor() { _tftDisplay.setCursor(0,0); }
     virtual void setCursor(int col, int row) {
         _tftDisplay.setCursor(
-            col * _tftDisplay.getTextSizeX() * 8,
-            row * _tftDisplay.getTextSizeY() * 8);
+            col * FONT_WIDTH,
+            row * FONT_HEIGHT);
     }
     virtual void setCursorXY(int x, int y) {
         _tftDisplay.setCursor(x, y);
     }
-    virtual int getMaxCursorCol() { return DISPLAY_WIDTH / _tftDisplay.getTextSizeX(); }
-    virtual int getMaxCursorRow() { return DISPLAY_HEIGHT / _tftDisplay.getTextSizeY(); }
+    virtual int getMaxCursorCol() { return (DISPLAY_WIDTH / FONT_WIDTH)-1; }
+    virtual int getMaxCursorRow() { return (DISPLAY_HEIGHT / FONT_HEIGHT)-1; }
     virtual Print &getPrint() { return *this; }
 
     virtual void setTextColor(uint16_t fg, uint16_t bg) {
@@ -189,6 +197,9 @@ public:
     }
     virtual int getTextSizeX() { return _tftDisplay.getTextSizeX(); }
     virtual int getTextSizeY() { return _tftDisplay.getTextSizeY(); }
+
+    virtual int getFontWidth() { return FONT_WIDTH; }
+    virtual int getFontHeight() { return FONT_HEIGHT; }
 
     // Print support
     virtual size_t write(uint8_t c)  { return _tftDisplay.write(c); }

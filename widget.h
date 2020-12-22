@@ -31,9 +31,15 @@ struct Geo {
     int y2() const { return pos.y + size.h - 1; }
 };
 
+enum class ControlEvent {
+    INC_VALUE,
+    DEC_VALUE,
+    ACTIVATE
+};
+
 class Control {
 public:
-    virtual void handleEvent(const Event &e) = 0;
+    virtual void handleEvent(const ControlEvent &e) = 0;
 };
 
 class Widget {

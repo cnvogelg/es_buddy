@@ -9,7 +9,8 @@ enum class EventType {
     DEC_VALUE,
     BUTTON_DOWN,
     BUTTON_UP,
-    BUTTON_LONG_PRESS
+    BUTTON_UP_LONG,
+    BUTTON_UP_EXTRA_LONG
 };
 
 struct Event {

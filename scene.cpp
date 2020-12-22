@@ -8,11 +8,15 @@ void Scene::enterScene()
     }
 }
 
-void Scene::draw(Drawable &d)
+void Scene::draw(Drawable &d, bool allowHilite)
 {
     for(Widget *w : _widgets) {
-        bool hilite = (w == _activeWidget);
+        bool hilite = (w == _activeWidget) && allowHilite;
         w->draw(d, hilite);
+    }
+
+    if(_extraWidget != nullptr) {
+        _extraWidget->draw(d, allowHilite);
     }
 }
 
@@ -34,7 +38,7 @@ void Scene::setDefaultActiveWidget()
     }
 }
 
-void Scene::handleEvent(const Event &e)
+void Scene::handleEvent(const ControlEvent &e)
 {
     if(_activeWidget != nullptr) {
         Control *c = _activeWidget->getControl();

@@ -17,17 +17,19 @@ public:
 
     const char *getName() { return _name; }
     Widget *getActiveWidget() { return _activeWidget; }
+    void setExtraWidget(Widget *w) { _extraWidget = w; }
 
     virtual void enterScene();
-    virtual void draw(Drawable &d);
+    virtual void draw(Drawable &d, bool allowHilite=true);
     virtual void leaveScene();
 
-    virtual void handleEvent(const Event &e);
+    virtual void handleEvent(const ControlEvent &e);
 
 protected:
     const char *_name;
     const std::vector<Widget *> _widgets;
     Widget *_activeWidget;
+    Widget *_extraWidget;
 
     void setDefaultActiveWidget();
 };

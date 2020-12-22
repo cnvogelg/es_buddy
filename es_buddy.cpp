@@ -56,10 +56,18 @@ bool ESBuddy::pollEvent(Event &e)
     if(state == ButtonState::RISE) {
         e.type = EventType::BUTTON_DOWN;
         _pressStart = millis();
+        _buttonLong = false;
+        _buttonExtraLong = false;
         return true;
     }
     else if(state == ButtonState::FALL) {
-        e.type = EventType::BUTTON_UP;
+        if(_buttonExtraLong) {
+            e.type = EventType::BUTTON_UP_EXTRA_LONG;
+        } else if(_buttonLong) {
+            e.type = EventType::BUTTON_UP_LONG;
+        } else {
+            e.type = EventType::BUTTON_UP;
+        }
         return true;
     }
 
@@ -67,8 +75,10 @@ bool ESBuddy::pollEvent(Event &e)
     if(_buttonDown) {
         unsigned long delta = millis() - _pressStart;
         if(delta > 500) {
-            e.type = EventType::BUTTON_LONG_PRESS;
-            return true;
+            _buttonLong = true;
+        }
+        if(delta > 2000) {
+            _buttonExtraLong = true;
         }
     }
 

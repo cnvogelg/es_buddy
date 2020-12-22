@@ -17,7 +17,8 @@ void SceneRenderer::renderScene(Scene *s)
     unsigned long start = millis();
     _display.displayClear();
     if(s != nullptr) {
-        s->draw(_display);
+        bool allowHilite = !_blink || _blink_state;
+        s->draw(_display, allowHilite);
     }
     if(_debug) {
         drawDebugStatus();
@@ -30,6 +31,13 @@ void SceneRenderer::renderScene(Scene *s)
     _last_delta_ms = start - _last_start;
     _last_end = end;
     _last_start = start;
+
+    // update blink: 500ms
+    long delta = start - _last_blink;
+    if(delta > 500) {
+        _blink_state = !_blink_state;
+        _last_blink = start;
+    }
 }
 
 void SceneRenderer::drawDebugStatus()
@@ -37,7 +45,7 @@ void SceneRenderer::drawDebugStatus()
     _display.setTextColor(COLOR_WHITE);
     _display.setTextScale(1,1);
 
-    int _mx = _display.getMaxCursorCol() - 6;
+    int _mx = _display.getMaxCursorCol() - 7;
     int _my = _display.getMaxCursorRow();
     Print &p = _display.getPrint();
     _display.setCursor(_mx, _my);

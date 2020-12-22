@@ -30,6 +30,8 @@ public:
     virtual void setTextScale(uint8_t sx, uint8_t sy) = 0;
     virtual int  getTextSizeX() = 0;
     virtual int  getTextSizeY() = 0;
+    virtual int  getFontWidth() = 0;
+    virtual int  getFontHeight() = 0;
 
     virtual void setColor(uint16_t color) = 0;
     virtual void line(int x1, int y1, int x2, int y2) = 0;
@@ -44,6 +46,9 @@ class Display : public Drawable {
 public:
     virtual void displayClear() = 0;
     virtual void displayUpdate() = 0;
+
+    virtual int getDisplayWidth() = 0;
+    virtual int getDisplayHeight() = 0;
 };
 
 #endif

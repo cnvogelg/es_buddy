@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "drawable.h"
-#include "param.h"
-#include "param_widget.h"
+#include "esb_param.h"
+#include "esb_widgets.h"
 #include "event.h"
 #include "scene.h"
 #include "scene_renderer.h"

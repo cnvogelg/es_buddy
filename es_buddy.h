@@ -6,8 +6,7 @@
 #include <Encoder.h>
 #include <Bounce.h>
 
-#include "drawable.h"
-#include "event.h"
+#include "esb_tinyui.h"
 
 // TFT Support
 #ifdef ES_HAVE_TFT

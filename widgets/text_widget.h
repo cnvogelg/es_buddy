@@ -1,7 +1,7 @@
 #ifndef TEXT_WIDGET_H
 #define TEXT_WIDGET_H
 
-#include "widget.h"
+#include "tinyui/widget.h"
 
 class TextWidget : public Widget
 {

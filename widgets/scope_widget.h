@@ -1,9 +1,8 @@
 #ifndef SCOPE_WIDGET_H
 #define SCOPE_WIDGET_H
 
-#include "widget.h"
-#include "sample_array.h"
-#include "analyze_avgarray.h"
+#include "esb_tinyui.h"
+#include "esb_audio.h"
 
 class ScopeWidget : public Widget
 {

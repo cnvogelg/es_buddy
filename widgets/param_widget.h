@@ -2,7 +2,7 @@
 #define PARAM_WIDGET_H
 
 #include "text_widget.h"
-#include "param.h"
+#include "esb_param.h"
 
 template<typename Scalar>
 class TextParamWidget : public TextWidget

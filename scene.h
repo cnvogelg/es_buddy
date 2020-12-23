@@ -5,33 +5,35 @@
 
 #include "drawable.h"
 #include "widget.h"
+#include "param.h"
 
 class Scene
 {
 public:
-    Scene(const char *name, const std::vector<Widget *> &widgets)
-    : _name(name), _widgets(widgets) 
-    {
-        setDefaultActiveWidget();
-    }
+    Scene(const char *name, const std::vector<Widget *> &widgets,
+        const std::vector<Control *> &controls);
 
     const char *getName() { return _name; }
     Widget *getActiveWidget() { return _activeWidget; }
-    void setExtraWidget(Widget *w) { _extraWidget = w; }
+    void setExtraControl(Control *c) { _extraControl = c; }
 
     virtual void enterScene();
     virtual void draw(Drawable &d, bool allowHilite=true);
     virtual void leaveScene();
 
-    virtual void handleEvent(const ControlEvent &e);
+    virtual bool handleEvent(const ControlEvent &e);
+
+    Control *getActiveControl();
+    void selectPrevControl();
+    void selectNextControl();
 
 protected:
     const char *_name;
     const std::vector<Widget *> _widgets;
+    const std::vector<Control *> _controls;
+    IntRangeParam _selectedControlParam;
     Widget *_activeWidget;
-    Widget *_extraWidget;
-
-    void setDefaultActiveWidget();
+    Control *_extraControl;
 };
 
 #endif

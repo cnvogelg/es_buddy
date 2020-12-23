@@ -16,20 +16,15 @@ public:
         const std::vector<Scene *> &scenes, 
         int frame_ms=20);
 
-    void setActiveScene(int num)
-    {
-        _selectedSceneParam.setValue(num);
-    }
+    Scene *getActiveScene();
+    void setActiveScene(int num);
 
     void handle();
-
-    Scene *getActiveScene();
 
 private:
     enum InputState {
         WIDGET_NORMAL,
-        WIDGET_SELECT,
-        SCENE_SELECT
+        WIDGET_SELECT
     };
 
     SceneRenderer _renderer;
@@ -38,10 +33,11 @@ private:
     InputState _inputState;
     IntRangeParam _selectedSceneParam;
     IntTextParamControl _selectedSceneControl;
+    Scene *_activeScene;
 
     void handleWidgetNormalEvent(Scene *scene, const Event &e);
-    void handleWidgetSelectEvent(const Event &e);
-    void handleSceneSelectEvent(const Event &e);
+    void handleWidgetSelectEvent(Scene *scene, const Event &e);
+    void changeActiveScene(int idx);
 
     Geo getSceneSelectGeo(Display &display) {
         return Geo(0,

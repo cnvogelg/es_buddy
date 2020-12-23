@@ -37,11 +37,6 @@ enum class ControlEvent {
     ACTIVATE
 };
 
-class Control {
-public:
-    virtual void handleEvent(const ControlEvent &e) = 0;
-};
-
 class Widget {
 public:
     Widget(const Geo &geo)
@@ -52,12 +47,8 @@ public:
     virtual void draw(Drawable &d, bool hilite) = 0;
     virtual void exit() {}
 
-    Control *getControl() { return _control; }
-    void setControl(Control *control) { _control = control; }
-
 protected:
     Geo _geo;
-    Control *_control;
 
     void drawBorder(Drawable &d) {
         d.drawRect(_geo.x(), _geo.y(), _geo.w(), _geo.h());
@@ -69,6 +60,12 @@ protected:
     void setBackColor(Drawable &d) { d.setColor(COLOR_BLACK); }
     void setHiliteColor(Drawable &d) { d.setColor(COLOR_YELLOW); }
     void setNormalColor(Drawable &d) { d.setColor(COLOR_WHITE); }
+};
+
+class Control {
+public:
+    virtual void handleEvent(const ControlEvent &e) = 0;
+    virtual Widget *getWidget() = 0;
 };
 
 #endif // WIDGET_H

@@ -41,7 +41,10 @@ public:
     : TextParamWidget<Scalar>(geo, title, param),
       _rangeParam(param)
     {
-        Widget::setControl(this);
+    }
+
+    virtual Widget *getWidget() {
+        return this;
     }
 
     virtual void handleEvent(const ControlEvent &e) {

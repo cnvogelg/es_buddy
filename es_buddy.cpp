@@ -39,11 +39,11 @@ ButtonState ESBuddy::buttonRead()
 { 
     _button.update();
     if(_button.risingEdge()) {
-        _buttonDown = true;
-        return ButtonState::RISE;
-    } else if(_button.fallingEdge()) {
         _buttonDown = false;
-        return ButtonState::FALL;
+        return ButtonState::DISABLE;
+    } else if(_button.fallingEdge()) {
+        _buttonDown = true;
+        return ButtonState::ENABLE;
     } else {
         return ButtonState::NONE;
     }
@@ -53,14 +53,14 @@ bool ESBuddy::pollEvent(Event &e)
 {
     // check button
     ButtonState state = buttonRead();
-    if(state == ButtonState::RISE) {
+    if(state == ButtonState::ENABLE) {
         e.type = EventType::BUTTON_DOWN;
         _pressStart = millis();
         _buttonLong = false;
         _buttonExtraLong = false;
         return true;
     }
-    else if(state == ButtonState::FALL) {
+    else if(state == ButtonState::DISABLE) {
         if(_buttonExtraLong) {
             e.type = EventType::BUTTON_UP_EXTRA_LONG;
         } else if(_buttonLong) {
@@ -116,11 +116,11 @@ void ESBuddy::dumpState(Print &printer)
         case ButtonState::NONE:
             printer.println("NONE");
             break;
-        case ButtonState::RISE:
-            printer.println("RISE");
+        case ButtonState::ENABLE:
+            printer.println("ENABLE");
             break;
-        case ButtonState::FALL:
-            printer.println("FALL");
+        case ButtonState::DISABLE:
+            printer.println("DISABLE");
             break;
     }
 

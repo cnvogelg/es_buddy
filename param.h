@@ -87,6 +87,14 @@ public:
     Scalar getMaxValue() { return _maxValue; }
     Scalar getStep() { return _step; }
 
+    void setMinValue() {
+        setValue(_minValue);
+    }
+
+    void setMaxValue() {
+        setValue(_maxValue);
+    }
+
     bool setValue(Scalar value) {
         if((value >= _minValue) && (value <= _maxValue)) {
             Param<Scalar>::setValue(value);
@@ -96,20 +104,34 @@ public:
         }
     }
 
-    bool incValue(int num=1) {
+    bool incValue(int num=1, bool wrap=false) {
         Scalar value = this->getValue() + (_step * num);
+        bool ok = true;
         if(value > _maxValue) {
-            value = _maxValue;
+            if(wrap) {
+                value = _minValue;
+            } else {
+                value = _maxValue;
+                ok = false;
+            }
         }
-        return setValue(value);
+        setValue(value);
+        return ok;
     }
 
-    bool decValue(int num=1) {
+    bool decValue(int num=1, bool wrap=false) {
         Scalar value = this->getValue() - (_step * num);
+        bool ok = true;
         if(value < _minValue) {
-            value = _minValue;
+            if(wrap) {
+                value = _maxValue;
+            } else {
+                value = _minValue;
+                ok = false;
+            }
         }
-        return setValue(value);
+        setValue(value);
+        return ok;
     }
 
 protected:

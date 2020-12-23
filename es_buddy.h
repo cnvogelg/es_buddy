@@ -74,7 +74,7 @@
 #define ES_MIDI_OUT_PIN         1
 
 
-enum class ButtonState { RISE, FALL, NONE };
+enum class ButtonState { ENABLE, DISABLE, NONE };
 
 class ESBuddy : public Print, public EventSource
 {

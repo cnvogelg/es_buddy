@@ -48,6 +48,8 @@ void Scene::enterScene()
 
 void Scene::draw(Drawable &d, bool allowHilite)
 {
+    preDraw();
+
     for(Widget *w : _widgets) {
         w->draw(d, false);
     }

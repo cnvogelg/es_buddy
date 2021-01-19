@@ -87,6 +87,10 @@ public:
     Scalar getMaxValue() { return _maxValue; }
     Scalar getStep() { return _step; }
 
+    float getNormalizedValue() {
+        return ((float)Param<Scalar>::_value - (float)_minValue) / ((float)_maxValue - (float)_minValue);
+    }
+
     void setMinValue() {
         setValue(_minValue);
     }

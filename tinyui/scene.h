@@ -18,6 +18,7 @@ public:
     void setExtraControl(Control *c) { _extraControl = c; }
 
     virtual void enterScene();
+    virtual void preDraw() {}
     virtual void draw(Drawable &d, bool allowHilite=true);
     virtual void leaveScene();
 

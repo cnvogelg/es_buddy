@@ -80,7 +80,7 @@ class ESBuddy : public Print, public EventSource
 public:
     ESBuddy();
 
-    void init(float volume=0.5f);
+    void init();
 
     AudioStream &audioInput() { return _audioInput; }
     AudioStream &audioOutput() { return _audioOutput; }
@@ -149,9 +149,9 @@ public:
         )
     {}
 
-    void init(float volume=0.5f)
+    void init()
     {
-        ESBuddy::init(volume);
+        ESBuddy::init();
 
         _tftDisplay.initR(INITR_BLACKTAB);
         _tftDisplay.setRotation(3);
@@ -253,9 +253,9 @@ public:
         )
     {}
 
-    void init(float volume=0.5f)
+    void init()
     {
-        ESBuddy::init(volume);
+        ESBuddy::init();
 
         _oledDisplay.begin();
         _oledDisplay.setTextSize(1);

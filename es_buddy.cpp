@@ -8,7 +8,7 @@ ESBuddy::ESBuddy()
       _button(ES_BUTTON_PIN, 5)
 {}
 
-void ESBuddy::init(float volume)
+void ESBuddy::init()
 {
     pinMode(ES_BUTTON_PIN, INPUT);
     // setup LEDs
@@ -20,7 +20,9 @@ void ESBuddy::init(float volume)
     // setup shield mixer
     _audioShield.enable();
     _audioShield.inputSelect(myInput);
-    _audioShield.volume(volume);
+    _audioShield.volume(0.82);
+    _audioShield.adcHighPassFilterDisable();
+    _audioShield.lineInLevel(0,0);
 }
 
 int ESBuddy::encoderRead()

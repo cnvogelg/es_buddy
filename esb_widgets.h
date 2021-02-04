@@ -2,3 +2,4 @@
 #include "widgets/param_widget.h"
 #include "widgets/scope_widget.h"
 #include "widgets/bar_widget.h"
+#include "widgets/spectrum_widget.h"

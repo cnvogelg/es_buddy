@@ -8,3 +8,4 @@
 #include "widgets/text_widget.cpp"
 #include "widgets/scope_widget.cpp"
 #include "widgets/bar_widget.cpp"
+#include "widgets/spectrum_widget.cpp"

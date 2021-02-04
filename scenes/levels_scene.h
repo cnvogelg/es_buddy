@@ -20,13 +20,13 @@ public:
         _minVoltParam(0.0f, -10.0f, 10.0f, 1.0f, " V"),
         _maxVoltParam(0.0f, -10.0f, 10.0f, 1.0f, " V"),
         _peakValParam(0.0f, 0.0f, 1.0f, 0.1f),
-        _dbParam(0.0f),
+        _dbParam(0.0f, 0.0f, 1.0f, 0.1f),
         _minValWidget(Geo(0,0,64,12), "min=", &_minValParam),
         _maxValWidget(Geo(0,12,64,12), "max=", &_maxValParam),
         _minVoltWidget(Geo(0,24,64,12), "min=", &_minVoltParam),
         _maxVoltWidget(Geo(0,36,64,12), "max=", &_maxVoltParam),
         _peakValWidget(Geo(0,48,160,12), _peakValParam, true),
-        _dbWidget(Geo(0,60,160,12), _dbParam)
+        _dbWidget(Geo(0,60,160,12), _dbParam, true)
     {
         _minVoltParam.setGetter([=]()->int{ return _minValParam.getValue() * 10.0f; });
         _maxVoltParam.setGetter([=]()->int{ return _maxValParam.getValue() * 10.0f; });

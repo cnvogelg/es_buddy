@@ -63,8 +63,12 @@ void Stage::handle()
 {
     Scene *activeScene = getActiveScene();
 
+    unsigned long now = millis();
+
     Event e;
     if(_eventSource.pollEvent(e)) {
+        _show_controls = true;
+        _last_event_time = now;
         Serial.print("ev:");
         Serial.println((int)e.type);
         switch(_inputState) {
@@ -77,7 +81,15 @@ void Stage::handle()
         }
     }
 
-    _renderer.renderScene(activeScene);
+    // hide controls after a while?
+    if(_show_controls) {
+        unsigned long delta = now - _last_event_time;
+        if(delta > _show_controls_time) {
+            _show_controls = false;
+        }
+    }
+
+    _renderer.renderScene(activeScene, _show_controls);
 }
 
 void Stage::handleWidgetNormalEvent(Scene *scene, const Event &e)

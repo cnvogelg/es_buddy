@@ -19,7 +19,7 @@ public:
 
     virtual void enterScene();
     virtual void preDraw() {}
-    virtual void draw(Drawable &d, bool allowHilite=true);
+    virtual void draw(Drawable &d, bool allowHilite=true, bool showControls=true);
     virtual void leaveScene();
 
     virtual bool handleEvent(const ControlEvent &e);

@@ -46,7 +46,7 @@ void Scene::enterScene()
     }
 }
 
-void Scene::draw(Drawable &d, bool allowHilite)
+void Scene::draw(Drawable &d, bool allowHilite, bool showControls)
 {
     preDraw();
 
@@ -56,13 +56,17 @@ void Scene::draw(Drawable &d, bool allowHilite)
 
     Control *activeControl = getActiveControl();
     for(Control *c : _controls) {
-        bool hilite = (activeControl == c) && allowHilite;
-        c->getWidget()->draw(d, hilite);
+        if(showControls || c->getShowAlways()) {
+            bool hilite = (activeControl == c) && allowHilite;
+            c->getWidget()->draw(d, hilite);
+        }
     }
 
     if(_extraControl != nullptr) {
-        bool hilite = (activeControl == _extraControl) && allowHilite;
-        _extraControl->getWidget()->draw(d, hilite);
+        if(showControls || _extraControl->getShowAlways()) {
+            bool hilite = (activeControl == _extraControl) && allowHilite;
+            _extraControl->getWidget()->draw(d, hilite);
+        }
     }
 }
 

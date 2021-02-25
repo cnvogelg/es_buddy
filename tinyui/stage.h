@@ -34,6 +34,9 @@ private:
     IntRangeParam _selectedSceneParam;
     IntTextParamControl _selectedSceneControl;
     Scene *_activeScene;
+    unsigned long _last_event_time;
+    bool _show_controls;
+    unsigned long _show_controls_time = 3000; // 3s
 
     void handleWidgetNormalEvent(Scene *scene, const Event &e);
     void handleWidgetSelectEvent(Scene *scene, const Event &e);

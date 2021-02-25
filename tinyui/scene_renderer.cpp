@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "scene_renderer.h"
 
-void SceneRenderer::renderScene(Scene *s)
+void SceneRenderer::renderScene(Scene *s, bool show_controls)
 {
     // check if we have to wait for this frame
     // since the last one was to short
@@ -18,7 +18,7 @@ void SceneRenderer::renderScene(Scene *s)
     _display.displayClear();
     if(s != nullptr) {
         bool allowHilite = !_blink || _blink_state;
-        s->draw(_display, allowHilite);
+        s->draw(_display, allowHilite, show_controls);
     }
     if(_debug) {
         drawDebugStatus();

@@ -11,7 +11,7 @@ public:
       _debug(false), _blink(false)
     {}
 
-    void renderScene(Scene *scene);
+    void renderScene(Scene *scene, bool show_controls);
 
     void setDebug(bool on) {
         _debug = on;

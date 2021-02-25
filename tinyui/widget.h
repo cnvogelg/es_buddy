@@ -66,6 +66,17 @@ class Control {
 public:
     virtual void handleEvent(const ControlEvent &e) = 0;
     virtual Widget *getWidget() = 0;
+
+    void setShowAlways(bool show) {
+        _showAlways = show;
+    }
+    bool getShowAlways() {
+        return _showAlways;
+    }
+
+protected:
+    bool _showAlways = false;
+
 };
 
 #endif // WIDGET_H

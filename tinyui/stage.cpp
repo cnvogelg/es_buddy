@@ -67,17 +67,21 @@ void Stage::handle()
 
     Event e;
     if(_eventSource.pollEvent(e)) {
-        _show_controls = true;
         _last_event_time = now;
-        Serial.print("ev:");
-        Serial.println((int)e.type);
-        switch(_inputState) {
-            case WIDGET_NORMAL:
-                handleWidgetNormalEvent(activeScene, e);
-                break;
-            case WIDGET_SELECT:
-                handleWidgetSelectEvent(activeScene, e);
-                break;
+        // first event with hidden controls simply activates display
+        if(!_show_controls) {
+            _show_controls = true;
+        } 
+        // handle event
+        else {
+            switch(_inputState) {
+                case WIDGET_NORMAL:
+                    handleWidgetNormalEvent(activeScene, e);
+                    break;
+                case WIDGET_SELECT:
+                    handleWidgetSelectEvent(activeScene, e);
+                    break;
+            }
         }
     }
 
@@ -86,6 +90,9 @@ void Stage::handle()
         unsigned long delta = now - _last_event_time;
         if(delta > _show_controls_time) {
             _show_controls = false;
+            // reset input state
+            _inputState = WIDGET_NORMAL;
+            _renderer.setBlink(false);
         }
     }
 

@@ -51,7 +51,9 @@ void Scene::draw(Drawable &d, bool allowHilite, bool showControls)
     preDraw();
 
     for(Widget *w : _widgets) {
-        w->draw(d, false);
+        if(w->isVisible(showControls)) {
+            w->draw(d, false);
+        }
     }
 
     Control *activeControl = getActiveControl();

@@ -17,6 +17,7 @@ public:
         _gridUnitMsParam(1, " ms"),  
         _gridUnitWidget(Geo(0,12,64,12), "grid=", &_gridUnitMsParam)
     {
+        _gridUnitWidget.setShowMode(Widget::SHOW_CONTROL);
         _windowSizeParam.setSetter([=](int value){ _scopeWidget.setWindowSize(value); });
         _windowSizeParam.setGetter([=]()->int{ return _scopeWidget.getWindowSize(); });
         _gridUnitMsParam.setGetter([=]()->int{ return _scopeWidget.getGridUnitMs(); });

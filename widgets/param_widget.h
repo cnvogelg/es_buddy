@@ -41,6 +41,7 @@ public:
     : TextParamWidget<Scalar>(geo, title, param),
       _rangeParam(param)
     {
+        Widget::setShowMode(Widget::SHOW_CONTROL);
     }
 
     virtual Widget *getWidget() {

@@ -56,16 +56,18 @@ void Scene::draw(Drawable &d, bool allowHilite, bool showControls)
 
     Control *activeControl = getActiveControl();
     for(Control *c : _controls) {
-        if(showControls || c->getShowAlways()) {
+        Widget *w = c->getWidget();
+        if(w->isVisible(showControls)) {
             bool hilite = (activeControl == c) && allowHilite;
-            c->getWidget()->draw(d, hilite);
+            w->draw(d, hilite);
         }
     }
 
     if(_extraControl != nullptr) {
-        if(showControls || _extraControl->getShowAlways()) {
+        Widget *w = _extraControl->getWidget();
+        if(w->isVisible(showControls)) {
             bool hilite = (activeControl == _extraControl) && allowHilite;
-            _extraControl->getWidget()->draw(d, hilite);
+            w->draw(d, hilite);
         }
     }
 }

@@ -40,15 +40,36 @@ enum class ControlEvent {
 class Widget {
 public:
     Widget(const Geo &geo)
-        : _geo(geo)
+        : _geo(geo),
+          _showMode(SHOW_MAIN)
     {}
+
+    enum ShowMode { SHOW_MAIN, SHOW_CONTROL, SHOW_BOTH };
 
     virtual void init() {}
     virtual void draw(Drawable &d, bool hilite) = 0;
     virtual void exit() {}
 
+    void setShowMode(ShowMode showMode) {
+        _showMode = showMode;
+    }
+    ShowMode getShowMode() {
+        return _showMode;
+    }
+    bool isVisible(bool drawControls) {
+        switch(_showMode) {
+            case SHOW_MAIN:
+                return !drawControls;
+            case SHOW_CONTROL:
+                return drawControls;
+            default:
+                return true;
+        }
+    }
+
 protected:
     Geo _geo;
+    ShowMode _showMode;
 
     void drawBorder(Drawable &d) {
         d.drawRect(_geo.x(), _geo.y(), _geo.w(), _geo.h());
@@ -66,17 +87,6 @@ class Control {
 public:
     virtual void handleEvent(const ControlEvent &e) = 0;
     virtual Widget *getWidget() = 0;
-
-    void setShowAlways(bool show) {
-        _showAlways = show;
-    }
-    bool getShowAlways() {
-        return _showAlways;
-    }
-
-protected:
-    bool _showAlways = false;
-
 };
 
 #endif // WIDGET_H

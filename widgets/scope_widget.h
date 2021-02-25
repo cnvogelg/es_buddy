@@ -8,12 +8,20 @@ class ScopeWidget : public Widget
 {
 public:
     ScopeWidget(const Geo &geo, int windowSize=1)
-        : Widget(geo)
+        : Widget(geo),
+          _channelX(geo.w()),
+          _channelY(geo.w())
     {
         setWindowSize(windowSize);
     }
 
-    AudioStream *addAudioStream(int16_t color);
+    AudioStream &getAudioInputX() {
+        return _channelX;
+    }
+
+    AudioStream &getAudioInputY() {
+        return _channelY;
+    }
 
     void setWindowSize(int windowSize);
     int getWindowSize() {
@@ -33,11 +41,8 @@ private:
     int _grid_w;
     int _grid_unit_ms;
 
-    static const int MAX_CHANNELS = 4;
-    int _numChannels = 0;
-
-    AudioAnalyzeAvgArray *_channels[MAX_CHANNELS];
-    int16_t _colors[MAX_CHANNELS];
+    AudioAnalyzeAvgArray _channelX;
+    AudioAnalyzeAvgArray _channelY;
 
     void drawSamples(Drawable &d, SampleArray &array, int16_t color);
     void drawGrid(Drawable &d);

@@ -22,7 +22,8 @@ public:
         _gridUnitMsParam.setGetter([=]()->int{ return _scopeWidget.getGridUnitMs(); });
     }
 
-    ScopeWidget &getScopeWidget() { return _scopeWidget; }
+    AudioStream &getAudioInputX() { return _scopeWidget.getAudioInputX(); }
+    AudioStream &getAudioInputY() { return _scopeWidget.getAudioInputY(); }
 
 protected:
     ScopeWidget             _scopeWidget;

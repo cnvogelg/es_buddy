@@ -1,36 +1,16 @@
 #include <Arduino.h>
 #include "scope_widget.h"
 
-AudioStream *ScopeWidget::addAudioStream(int16_t color)
-{
-    if(_numChannels == MAX_CHANNELS) {
-        return nullptr;
-    }
-
-    AudioAnalyzeAvgArray *result = new AudioAnalyzeAvgArray(_geo.w());
-    if(result == nullptr) {
-        return nullptr;
-    }
-
-    _channels[_numChannels] = result;
-    _colors[_numChannels] = color;
-    _numChannels++;
-
-    return result;
-}
-
 void ScopeWidget::init()
 {
-    for(int i=0;i<_numChannels;i++) {
-        _channels[i]->begin();
-    }    
+    _channelX.begin();
+    _channelY.begin();
 }
 
 void ScopeWidget::exit()
 {
-    for(int i=0;i<_numChannels;i++) {
-        _channels[i]->stop();
-    }    
+    _channelX.stop();
+    _channelY.stop();
 }
 
 void ScopeWidget::setWindowSize(int windowSize) {
@@ -50,17 +30,15 @@ void ScopeWidget::setWindowSize(int windowSize) {
     // how many pixels are n ms in scope display?
     _grid_w = _grid_unit_ms * 44100 / (windowSize * 1000); 
 
-    for(int i=0;i<_numChannels;i++) {
-        _channels[i]->setWindowSize(windowSize);
-    }
+    _channelX.setWindowSize(windowSize);
+    _channelY.setWindowSize(windowSize);
 }
 
 void ScopeWidget::draw(Drawable &d, bool hilite)
 {
     drawGrid(d);
-    for(int i=0;i<_numChannels;i++) {
-        drawSamples(d, _channels[i]->getArray(), _colors[i]);
-    }
+    drawSamples(d, _channelX.getArray(), COLOR_GREEN);
+    drawSamples(d, _channelY.getArray(), COLOR_YELLOW);
     if(hilite) {
         setHiliteColor(d);
         drawBorder(d);

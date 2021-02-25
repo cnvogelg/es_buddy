@@ -19,7 +19,6 @@ public:
     {
     }
 
-    SpectrumWidget &getSpectrumWidget() { return _spectrumWidget; }
     AudioStream &getAudioInput() { return _spectrumWidget.getAudioInput(); }
 
 protected:

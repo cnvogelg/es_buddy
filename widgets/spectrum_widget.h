@@ -27,6 +27,8 @@ private:
     float _maxHz = 22050.0f;
     float _posDb = 20.0;
     float _rangeDb = 80.0;
+    const float _numBins = 512;
+    const float _hzPerBin = 22050.0f / _numBins;
 
     float _xLogFactor;
     AudioAnalyzeFFT1024   _fft;

@@ -82,4 +82,32 @@ void SpectrumWidget::drawGrid(Drawable &d)
 
 void SpectrumWidget::drawBins(Drawable &d)
 {
+    if(!_fft.available()) {
+        return;
+    }
+
+    d.setColor(COLOR_GREEN);
+    int lastX;
+    int lastY;
+    bool lastValid = false;
+    float hzFac = 0.5;
+    for(int i=0;i<_numBins;i++) {
+        float mag = _fft.read(i);
+        float hz = hzFac * _hzPerBin;
+        float db = amplitudeToDecibels(mag);
+        db = signal_clamp(db, _posDb - _rangeDb, _posDb);
+        int x = mapX(hz);
+        int y = mapYDb(db);
+        if((x != -1) && (y != -1)) {
+            if(lastValid) {
+                d.vline(x, y, _geo.h() - y);
+            }
+            lastValid = true;
+            lastX = x;
+            lastY = y;
+        } else {
+            lastValid = false;
+        }
+        hzFac++;
+    }   
 }
